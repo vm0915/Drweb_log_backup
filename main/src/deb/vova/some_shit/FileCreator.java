@@ -1,3 +1,5 @@
+package deb.vova.some_shit;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;

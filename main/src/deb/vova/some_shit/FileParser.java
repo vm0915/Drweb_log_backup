@@ -1,3 +1,5 @@
+package deb.vova.some_shit;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;

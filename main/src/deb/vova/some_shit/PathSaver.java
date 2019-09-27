@@ -1,3 +1,5 @@
+package deb.vova.some_shit;
+
 import java.io.Serializable;
 
 public class PathSaver implements Serializable{
