@@ -1,3 +1,8 @@
+/**TODO:
+ * выбор пути сериализации
+ * начальное положение окон
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +24,8 @@ public class MainForm extends JFrame {
 
     private String pathFrom = "";
     private String pathTo = "";
-    String inputName = "";
+    private String inputName = "";
+    private String logText;
 
     public MainForm(){
         this.setContentPane(panel1);
@@ -45,15 +51,16 @@ public class MainForm extends JFrame {
                     File drWebCommonLogFile = FileFinder.fileFinder(pathFrom); //здесь все ок только с одной чертой
                     String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile);
                     inputName = newFile[1];
+                    logText = newFile[0];
                     changeName(inputName);
-                    FileCreator.createLogFile(pathTo, inputName, newFile[0]); //здесь имя должен возращать метод
-                    label3.setText("Готово" + inputName);
+                    //FileCreator.createLogFile(pathTo, inputName, newFile[0]); //здесь имя должен возращать метод
+                    //label3.setText("Готово" + inputName);
                 }
                 catch (NullPointerException e1){
                     label3.setText("Нет файлов в исходном каталоге");
                 }
                 catch (FileNotFoundException e1){
-                    label3.setText("Исходный файл не найден, либо не существует путь назначения");
+                    label3.setText("Исходный файл не найден");
                 }
 
 
@@ -68,7 +75,7 @@ public class MainForm extends JFrame {
                     //create pathsaver
                     PathSaver pathSaver = new PathSaver(pathFrom,pathTo);
                     // Saving of object in a file
-                    FileOutputStream file = new FileOutputStream("C:\\save.ser");
+                    FileOutputStream file = new FileOutputStream("C:\\save\\save.ser");
                     ObjectOutputStream out = new ObjectOutputStream(file);
                     // Method for serialization of object
                     out.writeObject(pathSaver);
@@ -90,7 +97,7 @@ public class MainForm extends JFrame {
         //Deserialization
         try {
             // Reading the object from a file
-            FileInputStream file = new FileInputStream("C:\\save.ser");
+            FileInputStream file = new FileInputStream("C:\\save\\save.ser");
             ObjectInputStream in = new ObjectInputStream(file);
 
             // Method for deserialization of object
@@ -126,5 +133,15 @@ public class MainForm extends JFrame {
 
     public void setInputName(String name){
         inputName = name;
+    }
+
+    public void createLogFile(){
+        try{
+        FileCreator.createLogFile(pathTo, inputName, logText); //здесь имя должен возращать метод
+        label3.setText("Готово." + "Создан файл: " + inputName);
+        }
+        catch(FileNotFoundException e){
+            label3.setText("Не существует путь назначения");
+        }
     }
 }

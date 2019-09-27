@@ -17,6 +17,7 @@ public class SmallForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e){
                 mainForm.setInputName(textField1.getText());
+                mainForm.createLogFile();
                 dispose();
             }
         });
