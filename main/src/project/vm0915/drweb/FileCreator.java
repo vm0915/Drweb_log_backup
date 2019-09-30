@@ -7,8 +7,8 @@ import java.io.UnsupportedEncodingException;
 public class FileCreator {
     /**
      * void createLogFile(String path, String name, String text)
-     * получает путь для создания файла, содержимое файла, его имя и дату создания
-     *
+     * получает путь для создания файла, его имя, содержимое файла
+     * создает файл
      */
     public static void createLogFile(String path, String name, String text) throws FileNotFoundException {
         try {
@@ -24,7 +24,7 @@ public class FileCreator {
             throw(e);
         }
         catch (UnsupportedEncodingException e){
-
+            System.out.println("unsupported encoding");
         }
     }
 }

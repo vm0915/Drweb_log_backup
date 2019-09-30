@@ -5,7 +5,7 @@ import java.io.File;
 public class FileFinder {
 /***
  * File fileFinder(path)
- * находит и возвращает последний имененный файл в path
+ * находит и возвращает последний измененный файл в path
  */
     public static File fileFinder(String dirPath){
         System.out.println("fileFinder получил - " + dirPath);
@@ -21,7 +21,7 @@ public class FileFinder {
                 lastModifiedFile = files[i];
             }
         }
-        System.out.print("fileFinder возвращает имя" + lastModifiedFile.getName());
+        System.out.println("fileFinder возвращает имя" + lastModifiedFile.getName());
         return lastModifiedFile;
     }
 }

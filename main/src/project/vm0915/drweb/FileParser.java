@@ -8,7 +8,7 @@ public class FileParser   {
     /**
      * String findLastCheckLog(File file)
      * получает на вход файл логов, возвращает конец файла, начиная с последнего вхождения ключевого слова
-     * <p>
+     * (результат последней проверки)
      * String[] parser(String)
      * получает на вход результат последней проверки, возвращает имя файла, дату и время проверки
      */
@@ -16,7 +16,6 @@ public class FileParser   {
         String beginningKeyWord = "Dr.Web Scanner SE for Windows";
         String scanTimeKeyWord = "Scan time is";
         String lastLog = "";
-        String sessionStartTime = "";
         String scannedFilePath = "";
         int linePointerToBeginning = 0;
         int linePointerToScanTime = 0;
@@ -39,6 +38,7 @@ public class FileParser   {
             if (!hasKeyWord){
                 throw new FileNotFoundException();
             }
+            System.out.println("Scanner found  - " + lineNum);
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.print("scanner didn't found file");
@@ -49,16 +49,15 @@ public class FileParser   {
         try {
             Scanner scanner = new Scanner(file);
             int lineNum = 0;
+            System.out.println("linePointerToScanTime " + linePointerToScanTime);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 lineNum++;
                 if (lineNum > linePointerToBeginning - 1) {
                     lastLog = lastLog.concat(line + "\r\n");
-                    if (lineNum == linePointerToBeginning + 3){
-                        sessionStartTime = line;
-                    }
                     if (lineNum == linePointerToScanTime - 4){
                         scannedFilePath = line;
+                        System.out.println("scannedFilePath " + scannedFilePath);
                     }
                 }
             }
@@ -66,8 +65,12 @@ public class FileParser   {
         } catch (FileNotFoundException e) {
             System.out.print("scanner didn't found file");
         }
+
+        System.out.println("scannedFilePath - " + scannedFilePath);
         File lastScannedFile = new File(scannedFilePath);
         String preName = lastScannedFile.getName();
+        System.out.println("preName - " + preName);
+        System.out.println(preName.lastIndexOf(" - Ok"));
         int endOfName = preName.lastIndexOf(" - Ok");
         String []newArray = new String[2];
         newArray[0] = lastLog;
