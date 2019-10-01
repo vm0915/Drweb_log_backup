@@ -54,21 +54,7 @@ public class MainForm extends JFrame {
             public void windowClosing(WindowEvent e)
             {
                 //Serialization
-                try {
-                    PathSaver pathSaver = new PathSaver(pathFrom,pathTo);
-                    FileOutputStream file = new FileOutputStream("C:\\save\\save.ser");
-                    ObjectOutputStream out = new ObjectOutputStream(file);
-                    out.writeObject(pathSaver);
-                    out.close();
-                    file.close();
-                    System.out.println("Object has been serialized\n");
-                }
-
-                catch (IOException ex) {
-                    ex.printStackTrace();
-                    System.out.println("IOException is caught");
-                }
-
+                serialization();
                 System.exit(0);
             }
         });
@@ -119,6 +105,23 @@ public class MainForm extends JFrame {
         }
         catch(FileNotFoundException e){
             label3.setText("Не существует путь назначения");
+        }
+    }
+
+    public void serialization(){
+        try {
+            PathSaver pathSaver = new PathSaver(pathFrom,pathTo);
+            FileOutputStream file = new FileOutputStream("C:\\save\\save.ser");
+            ObjectOutputStream out = new ObjectOutputStream(file);
+            out.writeObject(pathSaver);
+            out.close();
+            file.close();
+            System.out.println("Object has been serialized\n");
+        }
+
+        catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("IOException is caught");
         }
     }
 }

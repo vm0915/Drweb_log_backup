@@ -14,14 +14,15 @@ public class FileParser   {
      */
     public static String[] findLastCheckLog(File file) throws FileNotFoundException {
         String beginningKeyWord = "Dr.Web Scanner SE for Windows";
-        String scanTimeKeyWord = "Scan time is";
+        String objectsToScanKeyWord = "Object(s) to scan:";
         String lastLog = "";
         String scannedFilePath = "";
+        String firstScannedFileLine = "";
         int linePointerToBeginning = 0;
-        int linePointerToScanTime = 0;
+        int linePointerToObjectsToScan = 0;
         boolean hasKeyWord = false;
         try {
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(file, "UTF-8");
             int lineNum = 0;
             linePointerToBeginning = 0;
             while (scanner.hasNext()) {
@@ -30,8 +31,8 @@ public class FileParser   {
                     linePointerToBeginning = lineNum;
                     hasKeyWord = true;
                 }
-                if (line.contains(scanTimeKeyWord)) { //check input
-                    linePointerToScanTime = lineNum;
+                if (line.contains(objectsToScanKeyWord)) { //check input
+                    linePointerToObjectsToScan = lineNum;
                 }
                 lineNum++;
             }
@@ -45,19 +46,28 @@ public class FileParser   {
             throw(e);
         }
 
-
         try {
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(file,"UTF-8");
             int lineNum = 0;
-            System.out.println("linePointerToScanTime " + linePointerToScanTime);
+            System.out.println("linePointerToObjectsToScan " + linePointerToObjectsToScan);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 lineNum++;
                 if (lineNum > linePointerToBeginning - 1) {
+                    if (lineNum == linePointerToBeginning){
+                        System.out.println("That line is" + line);
+                        if (line.contains("п»ї"))
+                        {
+                            line = line.substring("п»ї".length(), line.length());
+                        }
+                    }
                     lastLog = lastLog.concat(line + "\r\n");
-                    if (lineNum == linePointerToScanTime - 4){
-                        scannedFilePath = line;
+                    if (lineNum == linePointerToObjectsToScan + 2){
+                        scannedFilePath = line.substring(" - ".length(), line.length());
                         System.out.println("scannedFilePath " + scannedFilePath);
+                    }
+                    if (lineNum == linePointerToObjectsToScan + 5){
+                        firstScannedFileLine = line;
                     }
                 }
             }
@@ -66,15 +76,22 @@ public class FileParser   {
             System.out.print("scanner didn't found file");
         }
 
-        System.out.println("scannedFilePath - " + scannedFilePath);
         File lastScannedFile = new File(scannedFilePath);
         String preName = lastScannedFile.getName();
-        System.out.println("preName - " + preName);
-        System.out.println(preName.lastIndexOf(" - Ok"));
-        int endOfName = preName.lastIndexOf(" - Ok");
+        if (preName.equals("")){
+            String beginning =
+                    firstScannedFileLine.substring(firstScannedFileLine.indexOf(scannedFilePath) + scannedFilePath.length());
+            int indexOfSlash;
+            indexOfSlash = beginning.indexOf("\\");
+            if (indexOfSlash == -1)
+                preName = beginning;
+            else
+                preName = beginning.substring(0,indexOfSlash);
+        }
+        System.out.println("preName = " + preName);
         String []newArray = new String[2];
         newArray[0] = lastLog;
-        newArray[1] = preName.substring(0, endOfName); //scanned file name
+        newArray[1] = preName; //scanned file name
         System.out.print(newArray[1]);
         return newArray;
     }
