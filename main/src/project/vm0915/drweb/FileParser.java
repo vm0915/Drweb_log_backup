@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class FileParser   {
     /**
-     * String findLastCheckLog(File file)
+     * String[] findLastCheckLog(File file)
      * получает на вход файл логов, возвращает конец файла, начиная с последнего вхождения ключевого слова
      * (результат последней проверки)
      * String[] parser(String)
@@ -21,6 +21,7 @@ public class FileParser   {
         int linePointerToBeginning = 0;
         int linePointerToObjectsToScan = 0;
         boolean hasKeyWord = false;
+        //чтение файла и поиск строк с ключевыми словами
         try {
             Scanner scanner = new Scanner(file, "UTF-8");
             int lineNum = 0;
@@ -39,23 +40,22 @@ public class FileParser   {
             if (!hasKeyWord){
                 throw new FileNotFoundException();
             }
-            System.out.println("Scanner found  - " + lineNum);
+            System.err.println("Scanner read " + lineNum + " lines in file");
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.print("scanner didn't found file");
+            System.err.print("Scanner didn't found file");
             throw(e);
         }
-
+        //
         try {
             Scanner scanner = new Scanner(file,"UTF-8");
             int lineNum = 0;
-            System.out.println("linePointerToObjectsToScan " + linePointerToObjectsToScan);
+            System.err.println("Последнее вхождение \" " + objectsToScanKeyWord + "\" на строке " + linePointerToObjectsToScan);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 lineNum++;
                 if (lineNum > linePointerToBeginning - 1) {
                     if (lineNum == linePointerToBeginning){
-                        System.out.println("That line is" + line);
                         if (line.contains("п»ї"))
                         {
                             line = line.substring("п»ї".length(), line.length());
@@ -64,7 +64,7 @@ public class FileParser   {
                     lastLog = lastLog.concat(line + "\r\n");
                     if (lineNum == linePointerToObjectsToScan + 2){
                         scannedFilePath = line.substring(" - ".length(), line.length());
-                        System.out.println("scannedFilePath " + scannedFilePath);
+                        System.err.println("Scanned file path: " + scannedFilePath);
                     }
                     if (lineNum == linePointerToObjectsToScan + 5){
                         firstScannedFileLine = line;
@@ -73,7 +73,7 @@ public class FileParser   {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.print("scanner didn't found file");
+            System.out.print("Scanner didn't found file");
         }
 
         File lastScannedFile = new File(scannedFilePath);
@@ -88,11 +88,10 @@ public class FileParser   {
             else
                 preName = beginning.substring(0,indexOfSlash);
         }
-        System.out.println("preName = " + preName);
+        System.err.println("preName = " + preName);
         String []newArray = new String[2];
         newArray[0] = lastLog;
         newArray[1] = preName; //scanned file name
-        System.out.print(newArray[1]);
         return newArray;
     }
 }

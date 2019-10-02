@@ -12,19 +12,18 @@ public class FileCreator {
      */
     public static void createLogFile(String path, String name, String text) throws FileNotFoundException {
         try {
-
-        System.out.println(path + "\\" + name);
-        PrintWriter writer = new PrintWriter(path + "\\" + name + ".txt", "UTF-8");
-        System.out.print(text);
-        writer.print(text);
-        writer.close();
+            PrintWriter writer = new PrintWriter(path + "\\" + name + ".txt", "UTF-8");
+            writer.print(text);
+            writer.close();
+            System.err.println("Создан файл " + path + "\\" + name);
+            System.out.print(text);
         }
         catch (FileNotFoundException e){
-            System.out.println("creator didn't find file");
+            System.err.println("Creator didn't find file");
             throw(e);
         }
         catch (UnsupportedEncodingException e){
-            System.out.println("unsupported encoding");
+            System.err.println("Unsupported encoding");
         }
     }
 }
