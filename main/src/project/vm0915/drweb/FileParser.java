@@ -2,6 +2,7 @@ package project.vm0915.drweb;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileParser   {
@@ -11,29 +12,32 @@ public class FileParser   {
      * (результат последней проверки)
      * String[] parser(String)
      * получает на вход результат последней проверки, возвращает имя файла, дату и время проверки
+     *
+     * TODO:
+     *  проверить что вводимое число требуемых последних проверок больше 0 и меньше чем найдено
+     *  проверить что количество найденных ключевых слов равно и обработать если нет
      */
-    public static String[] findLastCheckLog(File file) throws FileNotFoundException {
+    public static String[] findLastCheckLog(File file, int numberOfChecks) throws FileNotFoundException {
         String beginningKeyWord = "Dr.Web Scanner SE for Windows";
         String objectsToScanKeyWord = "Object(s) to scan:";
         String lastLog = "";
         String scannedFilePath = "";
         String firstScannedFileLine = "";
-        int linePointerToBeginning = 0;
-        int linePointerToObjectsToScan = 0;
+        ArrayList<Integer> linesOfCheckBeginnings = new ArrayList<Integer>();
+        ArrayList<Integer> linesOfObjectsToScan = new ArrayList<Integer>();
         boolean hasKeyWord = false;
         //чтение файла и поиск строк с ключевыми словами
         try {
             Scanner scanner = new Scanner(file, "UTF-8");
             int lineNum = 0;
-            linePointerToBeginning = 0;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 if (line.contains(beginningKeyWord)) { //check input
-                    linePointerToBeginning = lineNum;
+                    linesOfCheckBeginnings.add(lineNum);
                     hasKeyWord = true;
                 }
                 if (line.contains(objectsToScanKeyWord)) { //check input
-                    linePointerToObjectsToScan = lineNum;
+                    linesOfObjectsToScan.add(lineNum);
                 }
                 lineNum++;
             }
@@ -50,12 +54,13 @@ public class FileParser   {
         try {
             Scanner scanner = new Scanner(file,"UTF-8");
             int lineNum = 0;
-            System.err.println("Последнее вхождение \" " + objectsToScanKeyWord + "\" на строке " + linePointerToObjectsToScan);
+            int linePointerToRequiredBeginning = linesOfCheckBeginnings.get(linesOfCheckBeginnings.size() - numberOfChecks);
+            int linePointerToObjectsToScan = linesOfObjectsToScan.get(linesOfObjectsToScan.size() - numberOfChecks);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 lineNum++;
-                if (lineNum > linePointerToBeginning - 1) {
-                    if (lineNum == linePointerToBeginning){
+                if (lineNum > linePointerToRequiredBeginning - 1) {
+                    if (lineNum == linePointerToRequiredBeginning){
                         if (line.contains("п»ї"))
                         {
                             line = line.substring("п»ї".length(), line.length());

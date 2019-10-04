@@ -2,14 +2,16 @@ package project.vm0915.drweb;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MainForm extends JFrame {
+    /**
+     * TODO:
+     * цвет выводимых ошибок
+     * заменить надпись "параметры" на иконку
+     */
     private JButton configButton;
     private JComboBox comboBox1;
     private JButton createButton;
@@ -36,7 +38,6 @@ public class MainForm extends JFrame {
             comboBox1.addItem(s);
         }
         comboBox1.setEditable(false);
-        //System.out.println(comboBox1.getItemCount());
         setContentPane(panel);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,21 +52,24 @@ public class MainForm extends JFrame {
         });
         createButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                label1.setText("В обработке");
-                MainForm.super.repaint();
-                try {
-                    File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
-                    String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile);
-                    logText = newFile[0];
+                if (numberField.getText().equals("") || nameField.getText().equals("")) {
+                    label1.setForeground(Color.RED);
+                    label1.setText("Заполните все поля");
+                } else {
+                    label1.setText("В обработке");
+                    MainForm.super.repaint();
+                    try {
+                        File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
+                        String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile, Integer.parseInt(numberField.getText()));
+                        logText = newFile[0];
+                    } catch (NullPointerException e1) {
+                        label1.setText("Нет файлов в исходном каталоге");
+                    } catch (FileNotFoundException e1) {
+                        label1.setText("Исходный файл не найден");
+                    }
+                    inputName = comboBox1.getSelectedItem() + nameField.getText();
+                    createLogFile();
                 }
-                catch (NullPointerException e1){
-                    label1.setText("Нет файлов в исходном каталоге");
-                }
-                catch (FileNotFoundException e1){
-                    label1.setText("Исходный файл не найден");
-                }
-                inputName = comboBox1.getSelectedItem() + nameField.getText();
-                createLogFile();
             }
         });
         configButton.addActionListener((new ActionListener() {
@@ -78,8 +82,15 @@ public class MainForm extends JFrame {
         {
             public void windowClosing(WindowEvent e)
             {
-                //saver.serialization();
                 System.exit(0);
+            }
+        });
+        numberField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+                    e.consume();  // ignore event
+                }
             }
         });
     }

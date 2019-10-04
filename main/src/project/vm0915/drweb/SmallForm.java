@@ -23,13 +23,6 @@ public class SmallForm extends JFrame {
                         dim.height/2-this.getSize().height/2);
         this.setVisible(true);
 
-        createButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e){
-                configForm.setInputName(textField1.getText());
-                //configForm.createLogFile();
-                dispose();
-            }
-        });
         this.addWindowListener(new WindowAdapter()
         {
             public void windowClosing(WindowEvent e)

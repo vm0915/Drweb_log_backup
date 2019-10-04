@@ -9,6 +9,9 @@ public class FileCreator {
      * void createLogFile(String path, String name, String text)
      * получает путь для создания файла, его имя, содержимое файла
      * создает файл
+     *
+     * TODO:
+     * проверить что файл с таким именем уже существует
      */
     public static void createLogFile(String path, String name, String text) throws FileNotFoundException {
         try {
