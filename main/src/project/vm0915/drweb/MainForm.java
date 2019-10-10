@@ -53,22 +53,37 @@ public class MainForm extends JFrame {
         createButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (numberField.getText().equals("") || nameField.getText().equals("")) {
-                    label1.setForeground(Color.RED);
+                    //label1.setForeground(Color.RED);
                     label1.setText("Заполните все поля");
                 } else {
-                    label1.setText("В обработке");
-                    MainForm.super.repaint();
-                    try {
-                        File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
-                        String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile, Integer.parseInt(numberField.getText()));
-                        logText = newFile[0];
-                    } catch (NullPointerException e1) {
-                        label1.setText("Нет файлов в исходном каталоге");
-                    } catch (FileNotFoundException e1) {
-                        label1.setText("Исходный файл не найден");
+                    if (numberField.getText().equals("0")){
+                        label1.setText("Количество проверок не может быть равно 0");
+                        MainForm.this.pack();
                     }
-                    inputName = comboBox1.getSelectedItem() + nameField.getText();
-                    createLogFile();
+                    else{
+                        label1.setText("В обработке");
+                        MainForm.super.repaint();
+                        try {
+                            File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
+                            String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile, Integer.parseInt(numberField.getText()));
+                            logText = newFile[0];
+                            inputName = comboBox1.getSelectedItem() + nameField.getText();
+                            createLogFile();
+                        } catch (NullPointerException e1) {
+                            label1.setText("Нет файлов в исходном каталоге");
+                        } catch (FileNotFoundException e1) {
+                            label1.setText("Исходный файл не найден");
+                        }
+                        catch (IndexOutOfBoundsException e1){
+                            label1.setText("В исходном файле меньше проверок, чем Вы указали");
+                            MainForm.super.pack();
+                        }
+                        catch (IllegalArgumentException e1){
+                            label1.setText("Файл с таким именем уже существует");
+                        }
+
+                    }
+
                 }
             }
         });

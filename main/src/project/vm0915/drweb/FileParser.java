@@ -14,10 +14,10 @@ public class FileParser   {
      * получает на вход результат последней проверки, возвращает имя файла, дату и время проверки
      *
      * TODO:
-     *  проверить что вводимое число требуемых последних проверок больше 0 и меньше чем найдено
      *  проверить что количество найденных ключевых слов равно и обработать если нет
      */
-    public static String[] findLastCheckLog(File file, int numberOfChecks) throws FileNotFoundException {
+    public static String[] findLastCheckLog(File file, int numberOfChecks) throws FileNotFoundException,
+                                                                                    IndexOutOfBoundsException {
         String beginningKeyWord = "Dr.Web Scanner SE for Windows";
         String objectsToScanKeyWord = "Object(s) to scan:";
         String lastLog = "";
@@ -30,15 +30,24 @@ public class FileParser   {
         try {
             Scanner scanner = new Scanner(file, "UTF-8");
             int lineNum = 0;
+            //поседующие переменные нужны для игнориования записей с beginningKeyWord не оканчивающихся objectToScanKeyWord
+            int lineBegin = -1;
+            int lineScan = -1;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 if (line.contains(beginningKeyWord)) { //check input
-                    linesOfCheckBeginnings.add(lineNum);
+                    lineBegin = lineNum;
                     hasKeyWord = true;
                 }
                 if (line.contains(objectsToScanKeyWord)) { //check input
-                    linesOfObjectsToScan.add(lineNum);
+                    lineScan = lineNum;
                 }
+                if ((lineBegin != -1) && (lineScan != -1)){
+                    linesOfCheckBeginnings.add(lineBegin);
+                    linesOfObjectsToScan.add(lineScan);
+                    lineBegin = -1;
+                }
+                lineScan = -1;
                 lineNum++;
             }
             if (!hasKeyWord){
@@ -51,6 +60,10 @@ public class FileParser   {
             throw(e);
         }
         //
+        if (linesOfCheckBeginnings.size() < numberOfChecks){
+            throw new IndexOutOfBoundsException();
+        }
+        System.out.println(linesOfCheckBeginnings.size() + " - " + linesOfObjectsToScan.size());
         try {
             Scanner scanner = new Scanner(file,"UTF-8");
             int lineNum = 0;
@@ -78,7 +91,7 @@ public class FileParser   {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.print("Scanner didn't found file");
+            System.err.print("Scanner didn't found file");
         }
 
         File lastScannedFile = new File(scannedFilePath);

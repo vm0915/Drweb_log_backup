@@ -27,6 +27,8 @@ public class ConfigForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 saver.setPathFrom(textField1.getText());
                 saver.setPathTo(textField2.getText());
+                saver.serialization();
+                dispose();
             }
         });
         this.addWindowListener(new WindowAdapter()

@@ -5,7 +5,7 @@ import java.io.*;
 public class Saver implements Serializable{
     private String pathFrom;
     private String pathTo;
-    private String serializationPath = "C:\\save\\save.ser";
+    private String serializationPath = "save.ser";
 
     public Saver(String pathF, String pathT){
         pathFrom = pathF;
