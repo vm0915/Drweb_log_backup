@@ -19,19 +19,30 @@ public class MainForm extends JFrame {
     private JTextField nameField;
     private JLabel label1;
     private JTextField numberField;
+    private JTextField textFieldLv;
+    private JTextField textFieldPak;
+    private JTextField textFieldDoc;
 
     private String inputName = "";
     private String logText;
     Saver saver;
 
+    private String itemLv = "Lv_";
+    private String itemPak = "Pak_";
+    private String itemDoc = "Doc_";
+    private String itemLvPak = "Lv_Pak_";
+    private String itemLvPakDoc = "Lv_Pak_Doc";
+    private String itemEmpty = "";
+
     public MainForm(final Saver saver){
         this.saver = saver;
         String[] items = {
-                "Lv_",
-                "pak_",
-                "Lv_pak_",
-                "doc_",
-                ""
+                itemLv,
+                itemPak,
+                itemDoc,
+                itemLvPak,
+                itemLvPakDoc,
+                itemEmpty
         };
         comboBox1.setEditable(true);
         for(String s: items) {
@@ -45,9 +56,43 @@ public class MainForm extends JFrame {
         this.setLocation(dim.width/2-this.getSize().width/2,
                 dim.height/2-this.getSize().height/2);
 
+        comboBox1.setSelectedItem(itemLv);
+        textFieldDoc.setEditable(false);
+        textFieldLv.setEditable(true);
+        textFieldPak.setEditable(false);
         comboBox1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                clearFields();
+                if (comboBox1.getSelectedItem().equals(itemEmpty)){
+                    textFieldDoc.setEditable(false);
+                    textFieldLv.setEditable(false);
+                    textFieldPak.setEditable(false);
+                }
+                if (comboBox1.getSelectedItem().equals(itemLv)){
+                    textFieldDoc.setEditable(false);
+                    textFieldLv.setEditable(true);
+                    textFieldPak.setEditable(false);
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPak)){
+                    textFieldDoc.setEditable(false);
+                    textFieldLv.setEditable(true);
+                    textFieldPak.setEditable(true);
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPakDoc)){
+                    textFieldDoc.setEditable(true);
+                    textFieldLv.setEditable(true);
+                    textFieldPak.setEditable(true);
+                }
+                if (comboBox1.getSelectedItem().equals(itemPak)){
+                    textFieldDoc.setEditable(false);
+                    textFieldLv.setEditable(false);
+                    textFieldPak.setEditable(true);
+                }
+                if (comboBox1.getSelectedItem().equals(itemDoc)){
+                    textFieldDoc.setEditable(true);
+                    textFieldLv.setEditable(false);
+                    textFieldPak.setEditable(false);
+                }
             }
         });
         createButton.addActionListener(new ActionListener() {
@@ -67,7 +112,7 @@ public class MainForm extends JFrame {
                             File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
                             String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile, Integer.parseInt(numberField.getText()));
                             logText = newFile[0];
-                            inputName = comboBox1.getSelectedItem() + nameField.getText();
+                            inputName = nameField.getText();
                             createLogFile();
                         } catch (NullPointerException e1) {
                             label1.setText("Нет файлов в исходном каталоге");
@@ -108,6 +153,74 @@ public class MainForm extends JFrame {
                 }
             }
         });
+        textFieldLv.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (comboBox1.getSelectedItem().equals(itemEmpty)){
+                    nameField.setText("");
+                }
+                if (comboBox1.getSelectedItem().equals(itemLv)){
+                    nameField.setText("Lv_" + textFieldLv.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPak)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPakDoc)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText() + "_Doc_" + textFieldDoc.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemPak)){
+                    nameField.setText("Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemDoc)){
+                    nameField.setText("Doc_" + textFieldDoc.getText());
+                }
+            }
+        });
+        textFieldPak.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                if (comboBox1.getSelectedItem().equals(itemEmpty)){
+                    nameField.setText("");
+                }
+                if (comboBox1.getSelectedItem().equals(itemLv)){
+                    nameField.setText("Lv_" + textFieldLv.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPak)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPakDoc)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText() + "_Doc_" + textFieldDoc.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemPak)){
+                    nameField.setText("Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemDoc)){
+                    nameField.setText("Doc_" + textFieldDoc.getText());
+                }
+            }
+        });
+        textFieldDoc.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (comboBox1.getSelectedItem().equals(itemEmpty)){
+                    nameField.setText("");
+                }
+                if (comboBox1.getSelectedItem().equals(itemLv)){
+                    nameField.setText("Lv_" + textFieldLv.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPak)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemLvPakDoc)){
+                    nameField.setText("Lv_" + textFieldLv.getText() + "_Pak_" + textFieldPak.getText() + "_Doc_" + textFieldDoc.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemPak)){
+                    nameField.setText("Pak_" + textFieldPak.getText());
+                }
+                if (comboBox1.getSelectedItem().equals(itemDoc)){
+                    nameField.setText("Doc_" + textFieldDoc.getText());
+                }
+            }
+        });
     }
 
     public void createLogFile(){
@@ -118,5 +231,12 @@ public class MainForm extends JFrame {
         catch(FileNotFoundException e){
             label1.setText("Не существует путь назначения");
         }
+    }
+
+    private void clearFields(){
+        textFieldPak.setText("");
+        textFieldLv.setText("");
+        textFieldDoc.setText("");
+        nameField.setText("");
     }
 }

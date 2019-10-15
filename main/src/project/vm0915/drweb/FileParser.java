@@ -13,8 +13,6 @@ public class FileParser   {
      * String[] parser(String)
      * получает на вход результат последней проверки, возвращает имя файла, дату и время проверки
      *
-     * TODO:
-     *  проверить что количество найденных ключевых слов равно и обработать если нет
      */
     public static String[] findLastCheckLog(File file, int numberOfChecks) throws FileNotFoundException,
                                                                                     IndexOutOfBoundsException {
