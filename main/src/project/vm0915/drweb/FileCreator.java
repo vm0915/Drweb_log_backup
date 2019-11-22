@@ -15,10 +15,11 @@ public class FileCreator {
                                                                                 IllegalArgumentException {
         checkForDuplicates(path, name);
         try {
+            System.out.println("Trying to create file");
             PrintWriter writer = new PrintWriter(path + "\\" + name + ".txt", "UTF-8");
             writer.print(text);
             writer.close();
-            System.err.println("Создан файл " + path + "\\" + name + ".txt");
+            System.out.println("Created file: " + path + "\\" + name + ".txt");
             //System.out.print(text);
         }
         catch (FileNotFoundException e){

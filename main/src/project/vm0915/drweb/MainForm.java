@@ -110,7 +110,9 @@ public class MainForm extends JFrame {
                         MainForm.super.repaint();
                         try {
                             File drWebCommonLogFile = FileFinder.fileFinder(saver.getPathFrom());
+                            label1.setText("Ищем последние проверки");
                             String[] newFile = FileParser.findLastCheckLog(drWebCommonLogFile, Integer.parseInt(numberField.getText()));
+                            System.out.println("File parsed successfully");
                             logText = newFile[0];
                             inputName = nameField.getText();
                             createLogFile();
@@ -226,6 +228,7 @@ public class MainForm extends JFrame {
     public void createLogFile(){
         try{
             FileCreator.createLogFile(saver.getPathTo(), inputName, logText);
+            System.out.println("Done. ");
             label1.setText("Готово. " + "Создан файл: " + inputName + ".txt");
         }
         catch(FileNotFoundException e){

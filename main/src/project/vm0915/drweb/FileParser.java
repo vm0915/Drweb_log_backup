@@ -16,11 +16,13 @@ public class FileParser   {
      */
     public static String[] findLastCheckLog(File file, int numberOfChecks) throws FileNotFoundException,
                                                                                     IndexOutOfBoundsException {
+        int totalLines = 0;
         String beginningKeyWord = "Dr.Web Scanner SE for Windows";
         String objectsToScanKeyWord = "Object(s) to scan:";
         String lastLog = "";
         String scannedFilePath = "";
         String firstScannedFileLine = "";
+        StringBuilder builder = new StringBuilder();
         ArrayList<Integer> linesOfCheckBeginnings = new ArrayList<Integer>();
         ArrayList<Integer> linesOfObjectsToScan = new ArrayList<Integer>();
         boolean hasKeyWord = false;
@@ -28,11 +30,12 @@ public class FileParser   {
         try {
             Scanner scanner = new Scanner(file, "UTF-8");
             int lineNum = 0;
-            //поседующие переменные нужны для игнориования записей с beginningKeyWord не оканчивающихся objectToScanKeyWord
+            //последующие переменные нужны для игнориования записей с beginningKeyWord не оканчивающихся objectToScanKeyWord
             int lineBegin = -1;
             int lineScan = -1;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
+                System.out.println("Analyze line  " + lineNum);
                 if (line.contains(beginningKeyWord)) { //check input
                     lineBegin = lineNum;
                     hasKeyWord = true;
@@ -51,7 +54,8 @@ public class FileParser   {
             if (!hasKeyWord){
                 throw new FileNotFoundException();
             }
-            System.err.println("Scanner read " + lineNum + " lines in file");
+            totalLines = lineNum;
+            System.out.println("Scanner read " + lineNum + " lines in file");
             scanner.close();
         } catch (FileNotFoundException e) {
             System.err.print("Scanner didn't found file");
@@ -61,7 +65,7 @@ public class FileParser   {
         if (linesOfCheckBeginnings.size() < numberOfChecks){
             throw new IndexOutOfBoundsException();
         }
-        System.out.println(linesOfCheckBeginnings.size() + " - " + linesOfObjectsToScan.size());
+        System.out.println(linesOfCheckBeginnings.size() + " = " + linesOfObjectsToScan.size());
         try {
             Scanner scanner = new Scanner(file,"UTF-8");
             int lineNum = 0;
@@ -70,6 +74,7 @@ public class FileParser   {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 lineNum++;
+                System.out.println("Search and write required lines: " + lineNum + " of " + totalLines);
                 if (lineNum > linePointerToRequiredBeginning - 1) {
                     if (lineNum == linePointerToRequiredBeginning){
                         if (line.contains("п»ї"))
@@ -77,10 +82,11 @@ public class FileParser   {
                             line = line.substring("п»ї".length(), line.length());
                         }
                     }
-                    lastLog = lastLog.concat(line + "\r\n");
+                    //lastLog = lastLog.concat(line + "\r\n");
+                    builder.append(line + "\r\n");
                     if (lineNum == linePointerToObjectsToScan + 2){
                         scannedFilePath = line.substring(" - ".length(), line.length());
-                        System.err.println("Scanned file path: " + scannedFilePath);
+                        //System.err.println("Scanned file path: " + scannedFilePath);
                     }
                     if (lineNum == linePointerToObjectsToScan + 5){
                         firstScannedFileLine = line;
@@ -88,6 +94,7 @@ public class FileParser   {
                 }
             }
             scanner.close();
+            lastLog = builder.toString();
         } catch (FileNotFoundException e) {
             System.err.print("Scanner didn't found file");
         }
@@ -104,7 +111,7 @@ public class FileParser   {
             else
                 preName = beginning.substring(0,indexOfSlash);
         }
-        System.err.println("preName = " + preName);
+        //System.err.println("preName = " + preName);
         String []newArray = new String[2];
         newArray[0] = lastLog;
         newArray[1] = preName; //scanned file name

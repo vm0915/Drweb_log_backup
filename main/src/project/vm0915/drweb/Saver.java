@@ -33,7 +33,9 @@ public class Saver implements Serializable{
             out.writeObject(this);
             out.close();
             file.close();
-            System.out.println("Object has been serialized\n");
+            System.out.println("\nObject has been serialized");
+            System.out.println("Source DrWeb log directory: " + getPathFrom());
+            System.out.println("Destination log copy directory: " + getPathTo() + "\n");
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -46,14 +48,14 @@ public class Saver implements Serializable{
             FileInputStream file = new FileInputStream(serializationPath);
             ObjectInputStream in = new ObjectInputStream(file);
             Saver saver = (Saver) in.readObject();
-            System.out.println(saver);
-            System.out.println(saver.getPathFrom());
-            System.out.println(saver.getPathTo());
+            //System.out.println(saver);
             pathFrom = saver.getPathFrom();
             pathTo = saver.getPathTo();
             in.close();
             file.close();
-            System.out.println("Object has been deserialized\n");
+            System.out.println("\nObject has been deserialized");
+            System.out.println("Source DrWeb log directory: " + saver.getPathFrom());
+            System.out.println("Destination log copy directory: " + saver.getPathTo() + "\n");
         }
         catch (IOException ex) {
             System.out.println("IOException is caught");
